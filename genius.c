@@ -26,15 +26,25 @@ void print_sequence(color *head){
     do{
         printf("%d ", head->color_id);
         head = head->next;
-        sleep(1);
     }while(head != NULL);
 }
 
 color *game_init_with_level(int level, color **head, color **tail){
+    //fazer logica para  cada level
     if (level == 1){
         for(int i = 0; i < 4; i++){
-            color_init(head, tail, rand() % 4);
+            color_init(head, tail, (rand() % 4) + 1);
             
+        }
+        return *head;
+    } else if (level == 2){
+        for(int i = 0; i < 8; i++){
+            color_init(head, tail, (rand() % 4) + 1);
+        }
+        return *head;
+    } else if (level == 3){
+        for(int i = 0; i < 12; i++){
+            color_init(head, tail, (rand() % 4) + 1);
         }
         return *head;
     }
@@ -61,6 +71,11 @@ int show_menu(){
     }
 }
 
+void explain_the_game(){
+    printf("\n EXPLICANDO O JOGO...");
+    printf("\n[pressione a tecla 'ENTER' para voltar ao menu principal]\n");
+}
+
 int compare_input_sequence(color *head_1, color *tail_1, color *head_2, color *tail_2){
     color *aux_1 = head_1;
     color *aux_2 = head_2;
@@ -74,9 +89,6 @@ int compare_input_sequence(color *head_1, color *tail_1, color *head_2, color *t
         aux_2 = aux_2->next; 
     }
     
-    if (aux_1 != NULL || aux_2 != NULL) {
-        is_equal = 0;
-    }
     return is_equal;
 }
 
@@ -85,7 +97,7 @@ void finish_the_game(color *head, color *tail, color *head_input, color *tail_in
     int is_equal = compare_input_sequence(head, tail, head_input, tail_input);
     if (is_equal == 1) {
         if (tail_input->len == tail->len) {
-            printf("\nParabéns, você ganhou!!!\n");
+            printf("\nParabéns, você ganhou, vamos continuar!\n");
         } else {
             printf("\nSequência incorreta. Tente novamente.\n");
         }

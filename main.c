@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 #include "genius.h"
 
 int main(){
@@ -13,11 +14,13 @@ int main(){
     int current_color_input;
     int is_equal;
 
+while(1){
     int option = show_menu();
     if(option == '1'){
         game_init_with_level(1, &head, &tail);
         print_sequence(head);
         // depois de exibir as cores, limpa  tudo pro usuario não ter cola.
+        sleep(1);
         printf("\nDigite a sequencia atual: ");
         while(1){
             scanf("%d", &current_color_input);
@@ -30,7 +33,16 @@ int main(){
             }
         }
         finish_the_game(head, tail, head_input, tail_input);
+        
+        getc(stdin); 
+    }else if(option == '2'){
+        explain_the_game();
+        if(getchar() == '\n'){
+            continue;
+        }
+    }else if(option == '3'){
+        break;
     }
-    
+}    
     return 0;
 }

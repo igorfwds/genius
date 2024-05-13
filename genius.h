@@ -18,5 +18,6 @@ color *game_init_with_level(int level, color **head, color **tail);
 int show_menu();
 int compare_input_sequence(color *head_1, color *tail_1, color *tail_2, color *head_2);
 void finish_the_game(color *head, color *tail, color *head_input, color *tail_input);
+void print_sequence(color *head);
 
 #endif // GENIUS_H

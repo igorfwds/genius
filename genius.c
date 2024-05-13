@@ -19,15 +19,22 @@ void color_init(color **head, color **tail, int arg_color){
             *tail = new;
         }
         new->next = NULL;
-        printf("\n%d\n", arg_color );
     }
+}
+
+void print_sequence(color *head){
+    do{
+        printf("%d ", head->color_id);
+        head = head->next;
+        sleep(1);
+    }while(head != NULL);
 }
 
 color *game_init_with_level(int level, color **head, color **tail){
     if (level == 1){
         for(int i = 0; i < 4; i++){
             color_init(head, tail, rand() % 4);
-            sleep(1);
+            
         }
         return *head;
     }

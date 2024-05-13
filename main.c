@@ -16,6 +16,7 @@ int main(){
     int option = show_menu();
     if(option == '1'){
         game_init_with_level(1, &head, &tail);
+        print_sequence(head);
         // depois de exibir as cores, limpa  tudo pro usuario não ter cola.
         printf("\nDigite a sequencia atual: ");
         while(1){

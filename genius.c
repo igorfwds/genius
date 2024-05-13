@@ -9,6 +9,9 @@ void color_init(color **head, color **tail, int arg_color){
     color *new = (color*) malloc(sizeof(color));
     if (new!= NULL){
         new->color_id = arg_color;
+        new->len = 0; 
+        new->next = NULL; // Garanta que o próximo nó seja inicializado como NULL
+        
         if(*head == NULL){
             *head = new;
             *tail = new;
@@ -18,9 +21,10 @@ void color_init(color **head, color **tail, int arg_color){
             (*tail)->next = new;
             *tail = new;
         }
-        new->next = NULL;
     }
 }
+
+
 
 void print_sequence(color *head){
     do{
@@ -29,27 +33,36 @@ void print_sequence(color *head){
     }while(head != NULL);
 }
 
-color *game_init_with_level(int level, color **head, color **tail){
-    //fazer logica para  cada level
+void game_init_with_level(int level, color **head, color **tail){
+    // Liberar memória se já estiver alocada
+    if (*head != NULL) {
+        // Implemente a função de liberação de memória adequada
+        // Por exemplo, uma função chamada free_list que libera todos os elementos da lista
+        free_list(*head);
+        *head = NULL;
+    }
+    if (*tail != NULL) {
+        free_list(*tail);
+        *tail = NULL;
+    }
+
+    // Lógica para cada nível
     if (level == 1){
         for(int i = 0; i < 4; i++){
             color_init(head, tail, (rand() % 4) + 1);
             
         }
-        return *head;
     } else if (level == 2){
         for(int i = 0; i < 8; i++){
             color_init(head, tail, (rand() % 4) + 1);
         }
-        return *head;
     } else if (level == 3){
         for(int i = 0; i < 12; i++){
             color_init(head, tail, (rand() % 4) + 1);
         }
-        return *head;
     }
-    return NULL;
 }
+
 
 int show_menu(){
     int option;
@@ -57,8 +70,8 @@ int show_menu(){
         printf("\n Aproveite o Genius!");
         printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-");
         printf("\nDigite [1] para jogar!");
-        printf("\nDigite [2] para jogar!");
-        printf("\nDigite [3] para sair do jogo!");
+        printf("\nDigite [2] para entender o jogo!");
+        printf("\nDigite [3] para sair do jogo!\n=> ");
         option = getchar();
         getc(stdin);
         if(option != '1' && option != '2' && option != '3'){
@@ -74,6 +87,26 @@ int show_menu(){
 void explain_the_game(){
     printf("\n EXPLICANDO O JOGO...");
     printf("\n[pressione a tecla 'ENTER' para voltar ao menu principal]\n");
+}
+
+int show_sub_menu(){
+    int option;
+    while(1){
+        printf("\n ESCOLHA O NIVEL DO JOGO!");
+        printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-");
+        printf("\nDigite [1] para começar o level 1!");
+        printf("\nDigite [2] para começar o level 2!");
+        printf("\nDigite [3] para começar o level 3!\n=> ");
+        option = getchar();
+        getc(stdin);
+        if(option != '1' && option != '2' && option != '3'){
+            printf("\n\t-----------------------");
+            printf("\n\t|ERRO! Opção inválida!|");
+            printf("\n\t-----------------------");
+        }else{
+            return option;
+        }
+    }
 }
 
 int compare_input_sequence(color *head_1, color *tail_1, color *head_2, color *tail_2){
@@ -92,6 +125,16 @@ int compare_input_sequence(color *head_1, color *tail_1, color *head_2, color *t
     return is_equal;
 }
 
+void free_list(color *head) {
+    color *current = head;
+    color *next;
+
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
 
 void finish_the_game(color *head, color *tail, color *head_input, color *tail_input) {
     int is_equal = compare_input_sequence(head, tail, head_input, tail_input);
@@ -104,5 +147,9 @@ void finish_the_game(color *head, color *tail, color *head_input, color *tail_in
     } else {
         printf("\nSequência incorreta. Tente novamente.\n");
     }
+
+    // Liberar memória alocada para as sequências de entrada
+    free_list(head_input);
+    free_list(head);
 }
 

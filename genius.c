@@ -12,7 +12,9 @@ void color_init(color **head, color **tail, int arg_color){
         if(*head == NULL){
             *head = new;
             *tail = new;
+            (*head)->len = 1;
         }else{
+            (*head)->len += 1;
             (*tail)->next = new;
             *tail = new;
         }
@@ -51,3 +53,37 @@ int show_menu(){
         }
     }
 }
+
+int compare_input_sequence(color *head_1, color *tail_1, color *head_2, color *tail_2){
+    color *aux_1 = head_1;
+    color *aux_2 = head_2;
+    int is_equal = 1;
+    while(aux_1 != NULL && aux_2 != NULL){
+        if(aux_1->color_id != aux_2->color_id){
+            is_equal = 0;
+            return is_equal;
+        }
+        aux_1 = aux_1->next; 
+        aux_2 = aux_2->next; 
+    }
+    
+    if (aux_1 != NULL || aux_2 != NULL) {
+        is_equal = 0;
+    }
+    return is_equal;
+}
+
+
+void finish_the_game(color *head, color *tail, color *head_input, color *tail_input) {
+    int is_equal = compare_input_sequence(head, tail, head_input, tail_input);
+    if (is_equal == 1) {
+        if (tail_input->len == tail->len) {
+            printf("\nParabéns, você ganhou!!!\n");
+        } else {
+            printf("\nSequência incorreta. Tente novamente.\n");
+        }
+    } else {
+        printf("\nSequência incorreta. Tente novamente.\n");
+    }
+}
+

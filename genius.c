@@ -31,6 +31,7 @@ void print_sequence(color *head){
         printf("%d ", head->color_id);
         head = head->next;
     }while(head != NULL);
+    printf("\n=> ");
 }
 
 void game_init_with_level(int level, color **head, color **tail){
@@ -49,7 +50,7 @@ void game_init_with_level(int level, color **head, color **tail){
     // Lógica para cada nível
     if (level == 1){
         for(int i = 0; i < 4; i++){
-            color_init(head, tail, (rand() % 4) + 1);
+            color_init(head, tail, (rand() % 4) + 1); 
             
         }
     } else if (level == 2){
@@ -119,8 +120,8 @@ int compare_input_sequence(color *head_1, color *tail_1, color *head_2, color *t
             return is_equal;
         }
         aux_1 = aux_1->next; 
-        aux_2 = aux_2->next; 
-    }
+        aux_2 = aux_2->next;    
+    }                          
     
     return is_equal;
 }
@@ -131,7 +132,7 @@ void free_list(color *head) {
 
     while (current != NULL) {
         next = current->next;
-        free(current);
+        free(current);             
         current = next;
     }
 }
@@ -153,3 +154,47 @@ void finish_the_game(color *head, color *tail, color *head_input, color *tail_in
     free_list(head);
 }
 
+void play_game(color **head, color **tail, color **head_input, color **tail_input) {
+    int game_over = 0;
+    while (!game_over) {
+
+        int new_color = (rand() % 4) + 1;
+        color_init(head, tail, new_color);
+
+        print_sequence(*head);
+
+
+      int player_input;
+        for(int i = 0; i < (*head)->len; i++){
+            scanf("%d", &player_input);
+            color_init(head_input, tail_input, player_input);
+        }
+
+        if((*head)->len != (*head_input)->len){
+            printf("\nSequência incorreta. Fim de jogo.\n");
+            sleep(1);
+            printf("\n[pressione a tecla 'ENTER' para voltar ao menu principal]\n");
+        }
+
+        int is_equal = compare_input_sequence(*head, *tail, *head_input, *tail_input);
+        if (is_equal == 1 && (*tail_input)->len == (*tail)->len) {
+            printf("\nParabéns, você acertou, vamos continuar!\n");
+            
+        } else {
+            printf("\nSequência incorreta. Fim de jogo.\n");
+            game_over = 1;  
+            sleep(1);
+            printf("\n[pressione a tecla 'ENTER' para voltar ao menu principal]\n");
+        }
+
+
+        free_list(*head_input);
+        *head_input = NULL;
+        *tail_input = NULL;
+    }
+
+    free_list(*head);
+    *head = NULL;
+    *tail = NULL;
+
+}

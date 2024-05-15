@@ -34,37 +34,6 @@ void print_sequence(color *head){
     printf("\n=> ");
 }
 
-void game_init_with_level(int level, color **head, color **tail){
-    // Liberar memória se já estiver alocada
-    if (*head != NULL) {
-        // Implemente a função de liberação de memória adequada
-        // Por exemplo, uma função chamada free_list que libera todos os elementos da lista
-        free_list(*head);
-        *head = NULL;
-    }
-    if (*tail != NULL) {
-        free_list(*tail);
-        *tail = NULL;
-    }
-
-    // Lógica para cada nível
-    if (level == 1){
-        for(int i = 0; i < 4; i++){
-            color_init(head, tail, (rand() % 4) + 1); 
-            
-        }
-    } else if (level == 2){
-        for(int i = 0; i < 8; i++){
-            color_init(head, tail, (rand() % 4) + 1);
-        }
-    } else if (level == 3){
-        for(int i = 0; i < 12; i++){
-            color_init(head, tail, (rand() % 4) + 1);
-        }
-    }
-}
-
-
 int show_menu(){
     int option;
     while(1){
@@ -154,26 +123,35 @@ void finish_the_game(color *head, color *tail, color *head_input, color *tail_in
     free_list(head);
 }
 
-void play_game(color **head, color **tail, color **head_input, color **tail_input) {
+char *play_game(color **head, color **tail, color **head_input, color **tail_input,int level) {
+    char *name = (char*) malloc(50 * sizeof(char));
     int game_over = 0;
     while (!game_over) {
 
-        int new_color = (rand() % 4) + 1;
-        color_init(head, tail, new_color);
-
+        int new_color;
+        for (int i = 0; i < level; i++) {
+            new_color = (rand() % 4) + 1;
+            color_init(head, tail, new_color);
+        }
+        
         print_sequence(*head);
+        sleep(1);
+        clear_terminal();
 
 
-      int player_input;
+        int player_input;
         for(int i = 0; i < (*head)->len; i++){
             scanf("%d", &player_input);
             color_init(head_input, tail_input, player_input);
         }
-
+        getc(stdin);
         if((*head)->len != (*head_input)->len){
             printf("\nSequência incorreta. Fim de jogo.\n");
+            printf("Digite seu nome para ser adicionado ao Ranking: ");
+            scanf("%s", name);
             sleep(1);
             printf("\n[pressione a tecla 'ENTER' para voltar ao menu principal]\n");
+            return name;
         }
 
         int is_equal = compare_input_sequence(*head, *tail, *head_input, *tail_input);
@@ -183,18 +161,33 @@ void play_game(color **head, color **tail, color **head_input, color **tail_inpu
         } else {
             printf("\nSequência incorreta. Fim de jogo.\n");
             game_over = 1;  
+            printf("Digite seu nome para ser adicionado ao Ranking: ");
+            scanf("%s", name);
             sleep(1);
             printf("\n[pressione a tecla 'ENTER' para voltar ao menu principal]\n");
+           
         }
 
 
         free_list(*head_input);
         *head_input = NULL;
         *tail_input = NULL;
+        
     }
 
     free_list(*head);
     *head = NULL;
     *tail = NULL;
+    return name;
+}
+
+void clear_terminal() {
+    // Verifica se o sistema operacional é Windows
+    #ifdef _WIN32
+        system("cls");
+    // Verifica se o sistema operacional é Unix/Linux
+    #else
+        system("clear");
+    #endif
 
 }
